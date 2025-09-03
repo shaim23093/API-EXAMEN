@@ -1,0 +1,98 @@
+openapi: 3.0.3
+info:
+  title: STD23093
+  description: this is a specification of STD23093
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+paths:
+  /ping:
+    get:
+      summary: Retourne pong
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                type: string
+  /cars:
+    post:
+      summary: Créer une voiture
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Car'
+      responses:
+        '201':
+          description: Voiture créée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+    get:
+      summary: Récupérer toutes les voitures
+      responses:
+        '200':
+          description: Liste des voitures
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Car'
+  /cars/{id}:
+    get:
+      summary: Récupérer une voiture par ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Voiture trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+        '404':
+          description: Voiture non trouvée
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+components:
+  schemas:
+    Characteristic:
+      type: object
+      properties:
+        max_speed:
+          type: number
+        max_fuel_capacity:
+          type: number
+      required:
+        - max_speed
+        - max_fuel_capacity
+    Car:
+      type: object
+      properties:
+        identifier:
+          type: string
+        brand:
+          type: string
+        model:
+          type: string
+        characteristics:
+          $ref: '#/components/schemas/Characteristic'
+      required:
+        - identifier
+        - brand
+        - model
+        - characteristics
